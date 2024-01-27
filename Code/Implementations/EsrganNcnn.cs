@@ -79,6 +79,15 @@ namespace Cupscale.Implementations
             Logger.Log("[NCNN] " + line.Replace("\n", " ").Replace("\r", " "));
 
             if(error)
+            bool showTileProgress = Upscale.currentMode == Upscale.UpscaleMode.Preview || Upscale.currentMode == Upscale.UpscaleMode.Single;
+
+            if (showTileProgress && line.Trim().EndsWith("%"))
+            {
+                float percent = float.Parse(line.Replace("%", "").Replace(",", "."));
+                Program.mainForm.SetProgress(percent, $"Upscaling Tiles ({percent}%)");
+            }
+
+            if (error)
                 GeneralOutputHandler.HandleImpErrorMsgs(line, GeneralOutputHandler.ProcessType.Ncnn);
         }
     }
